@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
-
+import { InputHTMLAttributes } from "react";
 // Form validation schema
 const schema = z.object({
     name: z.string().min(2, "Name is required"),
@@ -104,23 +104,28 @@ export default function BookingPage() {
 function getTomorrowDate(): string {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    return tomorrow.toISOString().split("T")[0]; // format: yyyy-mm-dd
+    return tomorrow.toISOString().split("T")[0];
 }
 // Input field
-const Input = ({ label, error, type, ...rest }: any) => (
-
+type InputProps = {
+    label: string;
+    error?: string;
+    type?: string;
+} & InputHTMLAttributes<HTMLInputElement>;
+const Input = ({ label, error, type, ...rest }: InputProps) => (
     <div>
         <label className="block mb-1 font-medium text-gray-700">{label}</label>
         <input
+            type={type}
             min={type === "date" ? getTomorrowDate() : undefined}
             className={`w-full px-4 py-2 rounded-lg border ${error ? "border-red-500" : "border-gray-300"
                 } focus:outline-none focus:ring-2 focus:ring-blue-400 transition`}
-            type={type}
             {...rest}
         />
         {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
     </div>
 );
+
 
 
 
